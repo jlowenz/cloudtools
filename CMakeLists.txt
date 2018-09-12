@@ -41,7 +41,8 @@ add_library(medialskeleton
   src/Algorithm/Skeleton.cpp
   src/GlobalFunction.cpp
   src/Parameter.cpp
-  src/ParameterMgr.cpp)
+  src/ParameterMgr.cpp
+  src/DataMgr.cpp)
 target_link_libraries(medialskeleton ${PCL_LIBRARIES} Qt4::QtCore Qt4::QtGui ${ANN_LIBRARIES})
 
 install(TARGETS medialskeleton

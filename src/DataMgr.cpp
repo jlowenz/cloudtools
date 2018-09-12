@@ -1,5 +1,10 @@
 #include "DataMgr.h"
 
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/PCLPointCloud2.h>
+
 
 DataMgr::DataMgr(RichParameterSet* _para)
 {
@@ -36,8 +41,90 @@ bool DataMgr::isSkeletonEmpty()
   return skeleton.isEmpty();
 }
 
+inline float get_float(uint8_t* pt, const pcl::PCLPointField& f)
+{
+  return *(float*)&pt[f.offset];
+}
 
+inline double get_double(uint8_t* pt, const pcl::PCLPointField& f)
+{
+  return *(double*)&pt[f.offset];
+}
 
+inline float get_field(uint8_t* pt, const pcl::PCLPointField& f)
+{
+  if (f.datatype == pcl::PCLPointField::PointFieldTypes::FLOAT32) {
+    return get_float(pt, f);
+  } else if (f.datatype == pcl::PCLPointField::PointFieldTypes::FLOAT64) {
+    return static_cast<float>(get_double(pt, f));
+  }
+}
+
+void DataMgr::loadPCD(const std::string& filename, bool is_sample)
+{
+  pcl::PCLPointCloud2 cloud;
+  pcl::PCDReader in;
+  in.read(filename, cloud);
+
+  bool has_point = false;
+  bool has_normal = false;  
+  uint32_t findex[6]; // x y z nx ny nz
+  size_t N = cloud.width * cloud.height;
+  int i = 0;
+  for (auto f : cloud.fields) {
+    if (f.name == "x") {
+      has_point = true;
+      findex[0] = i;
+    } else if (f.name == "y") {
+      has_point = true;
+      findex[1] = i;
+    } else if (f.name == "z") {
+      has_point = true;
+      findex[2] = i;
+    } else if (f.name == "normal_x") {
+      has_normal = true;
+      findex[3] = i;
+    } else if (f.name == "normal_y") {
+      has_normal = true;
+      findex[4] = i;
+    } else if (f.name == "normal_z") {
+      has_normal = true;
+      findex[5] = i;
+    }
+    ++i;
+  }
+  if (!has_point) {
+    std::cerr << "PCD must contains x,y,z fields. NO POINTS LOADED." << std::endl;
+    return;
+  }
+
+  if (!is_sample) {
+    clearCMesh(original);
+  } else {
+    clearCMesh(samples);
+  }
+  curr_file_name = filename.c_str();
+  // iterate through the cloud and extract the points and normals
+  auto vi = vcg::tri::Allocator<CMesh>::AddVertices(is_sample ? samples : original,N);
+  uint8_t* data = &cloud.data[0];
+  for (size_t i = 0, o = 0; i < N; ++i, o += cloud.point_step) {
+    auto pt = &data[o];
+    vi->P() = CMesh::CoordType( get_field(pt, cloud.fields[findex[0]]),
+                                get_field(pt, cloud.fields[findex[1]]),
+                                get_field(pt, cloud.fields[findex[2]]));
+    if (has_normal) {
+      vi->N() = CMesh::CoordType( get_field(pt, cloud.fields[findex[3]]),
+                                  get_field(pt, cloud.fields[findex[4]]),
+                                  get_field(pt, cloud.fields[findex[5]]));
+    }
+    vi++;
+  }
+}
+
+void DataMgr::savePCD(const std::string& filename, CMesh& mesh)
+{
+  
+}
 
 void DataMgr::loadPlyToOriginal(QString fileName)
 {
@@ -259,9 +346,9 @@ double DataMgr::getInitRadiuse()
 		}
 	}
 
- 
-  global_paraMgr.setGlobalParameter("CGrid Radius", DoubleValue(init_radius));
-  global_paraMgr.setGlobalParameter("Initial Radius", DoubleValue(init_radius));
+  auto r = DoubleValue(init_radius);
+  global_paraMgr.setGlobalParameter("CGrid Radius", r);
+  global_paraMgr.setGlobalParameter("Initial Radius", r);
 
 	return init_radius;
 }

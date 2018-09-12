@@ -9,6 +9,7 @@
 #include <wrap/io_trimesh/import.h>
 #include <wrap/io_trimesh/export.h>
 
+#include <string>
 #include <sstream>
 #include <fstream>
 #include <set>
@@ -25,9 +26,13 @@ public:
 	DataMgr(RichParameterSet* _para);
 	~DataMgr(void);
 
+  void loadPCD(const std::string& filename, bool is_sample = false);
+  void savePCD(const std::string& filename, CMesh& mesh);
+  
 	void loadPlyToOriginal(QString fileName);
 	void loadPlyToSample(QString fileName);
 	void savePly(QString fileName, CMesh& mesh);
+
 	void loadImage(QString fileName);
   void loadXYZN(QString fileName);
 
