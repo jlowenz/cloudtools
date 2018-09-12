@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>cloudtools</name>
+  <version>0.1.0</version>
+  <description>Point cloud tools derived from the code of: Shihao Wu, Hui Huang, Daniel Cohen-Or, Minglung Gong, Hao Zhang, Guiqing Li, Baoquan Chen. Adapted to use PCD and PCL cloud inputs (implemented with VCGLib).
+  </description>
+
+  <maintainer email="github.jlowenz@xoxy.net"></maintainer>
+
+  <license>GPL</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>pcl</build_depend>
+  <build_depend>roscpp</build_depend>
+  <run_depend>pcl</run_depend>
+  <run_depend>roscpp</run_depend>
+</package>
