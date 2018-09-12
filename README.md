@@ -4,6 +4,7 @@ This software library computes a 3D curve skeleton for a point cloud. It utilize
 
 This is an adapted software package for the SIGGRAPH 2013 paper:
 
+```bibtex
   @article{Huang:2013:LMS:2461912.2461913,
     author = {Huang, Hui and Wu, Shihao and Cohen-Or, Daniel and Gong, Minglun and Zhang, Hao   and Li, Guiqing and Chen, Baoquan},
     title = {L1-medial Skeleton of Point Cloud},
@@ -23,7 +24,8 @@ This is an adapted software package for the SIGGRAPH 2013 paper:
     publisher = {ACM},
     address = {New York, NY, USA},
     keywords = {L1-median, curve skeleton, point cloud, regularization},} 
-    
+```
+
 It's been modified to work on GNU/Linux as a shared library for processing point clouds stored as PCD files. In addition, it's built using the ROS framework for integration into robotics projects. Out
 
 # Dependencies
