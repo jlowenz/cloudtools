@@ -1,6 +1,23 @@
 #include "Skeletonization.h"
 
+Skeleton* Skeletonization::getSkeleton()
+{
+  return this->skeleton;
+}
+
 void Skeletonization::run()
+{
+  // run until completion
+  int i = 0; 
+  while (!para->getBool("The Skeletonlization Process Should Stop")) {
+    // I *think* this is the best choice here...
+		runAutoWlopOneStep();
+    std::cout << "Iteration " << i << std::endl;
+    i++;
+  }
+}
+
+void Skeletonization::runIteration()
 {
   is_skeleton_locked = false;
 

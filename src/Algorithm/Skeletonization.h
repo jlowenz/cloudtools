@@ -11,7 +11,10 @@ public:
 	~Skeletonization(void);
 public:
 
-	void run();
+  Skeleton* getSkeleton();
+  
+  void run();
+	void runIteration();
 	void setInput(DataMgr* pData);
 	RichParameterSet* getParameterSet(){ return para; }
 	void setParameterSet(RichParameterSet* _para){para = _para;}

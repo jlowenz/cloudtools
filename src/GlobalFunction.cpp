@@ -121,7 +121,7 @@ void GlobalFun::other_neighbors(CGrid::iterator starta, CGrid::iterator enda,
 
 void GlobalFun::computeBallNeighbors(CMesh* mesh0, CMesh* mesh1, double radius, vcg::Box3f& box)
 {
-	if (radius < 0.0001)
+	if (radius < 0.0001) // TODO: this could be a problem
 	{
 		cout << "too small grid!!" << endl; 
 		return;
@@ -328,7 +328,10 @@ void GlobalFun::computeKnnNeigbhors(vector<CVertex> &datapts, vector<CVertex> &q
 
 	//cout << mycmd;
 
-	system(mycmd); 
+	if (system(mycmd) != 0) {
+    std::cerr << "Error making system call to RG_NearestNeighbors.exe" << std::endl;
+    throw std::runtime_error("System call error: RG_NearestNeighbors.exe");
+  }
 
 	//cout << "knn_neighbor file saved\n";
 
