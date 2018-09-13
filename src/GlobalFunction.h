@@ -71,7 +71,7 @@ public:
 		cout << endl;
 		starttime = clock();
 		mid_start = clock();
-		cout << "@@@@@ Time Count Strat For: " << str << endl;
+		//cout << "@@@@@ Time Count Strat For: " << str << endl;
 
 		_str = str;
 	}
@@ -88,8 +88,8 @@ public:
 	{
 		stoptime = clock();
 		timeused = stoptime - starttime;
-		cout << /*endl <<*/ "@@@@ finish	" << _str << "  time used:  " << timeused / double(CLOCKS_PER_SEC) << " seconds." << endl;
-		cout << endl;
+		//cout << /*endl <<*/ "@@@@ finish	" << _str << "  time used:  " << timeused / double(CLOCKS_PER_SEC) << " seconds." << endl;
+		//cout << endl;
 	}
 
 private:

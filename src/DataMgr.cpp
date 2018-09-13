@@ -72,8 +72,12 @@ void DataMgr::loadPCD(const std::string& filename, bool is_sample)
   size_t N = cloud.width * cloud.height;
   int i = 0;
   for (auto f : cloud.fields) {
+    printf("cloud fields: %s %u %u\n", f.name.c_str(), f.offset, f.datatype);
     if (f.name == "x") {
       has_point = true;
+      if (f.datatype == pcl::PCLPointField::PointFieldTypes::FLOAT64) {
+        std::cout << "Cloud is DOUBLE" << std::endl;
+      }
       findex[0] = i;
     } else if (f.name == "y") {
       has_point = true;
@@ -107,18 +111,31 @@ void DataMgr::loadPCD(const std::string& filename, bool is_sample)
   // iterate through the cloud and extract the points and normals
   auto vi = vcg::tri::Allocator<CMesh>::AddVertices(is_sample ? samples : original,N);
   uint8_t* data = &cloud.data[0];
+  std::cout << "Loading " << N << " points..." << std::endl;
   for (size_t i = 0, o = 0; i < N; ++i, o += cloud.point_step) {
     auto pt = &data[o];
-    vi->P() = CMesh::CoordType( get_field(pt, cloud.fields[findex[0]]),
-                                get_field(pt, cloud.fields[findex[1]]),
-                                get_field(pt, cloud.fields[findex[2]]));
+    float x,y,z;
+    x = get_field(pt, cloud.fields[findex[0]]);
+    y = get_field(pt, cloud.fields[findex[1]]);
+    z = get_field(pt, cloud.fields[findex[2]]);
+    vi->P()[0] = x;
+    vi->P()[1] = y;
+    vi->P()[2] = z; // WHY??
     if (has_normal) {
-      vi->N() = CMesh::CoordType( get_field(pt, cloud.fields[findex[3]]),
-                                  get_field(pt, cloud.fields[findex[4]]),
-                                  get_field(pt, cloud.fields[findex[5]]));
+      x = get_field(pt, cloud.fields[findex[3]]);
+      y = get_field(pt, cloud.fields[findex[4]]);
+      z = get_field(pt, cloud.fields[findex[5]]);
+      vi->N()[0] = x;
+      vi->N()[1] = y;
+      vi->N()[2] = z; // WHY??
     }
-    vi++;
+    vi->bIsOriginal = !is_sample;
+    vi->m_index = i;
+    (is_sample ? samples : original).bbox.Add(vi->P());
+    printf("%lu  %.3f %.3f %.3f\n", (unsigned long)&data[o], vi->P()[0], vi->P()[1], vi->P()[2]);
+    ++vi;
   }
+  (is_sample ? samples : original).vn = (is_sample ? samples : original).vert.size();
 }
 
 void DataMgr::savePCD(const std::string& filename, CMesh& mesh)

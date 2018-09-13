@@ -1,23 +1,25 @@
 #include "Skeletonization.h"
 
-Skeleton* Skeletonization::getSkeleton()
-{
-  return this->skeleton;
-}
-
-void Skeletonization::run()
+void Skeletonization::run_full(DataMgr* data)
 {
   // run until completion
   int i = 0; 
-  while (!para->getBool("The Skeletonlization Process Should Stop")) {
+  do {
+    is_skeleton_locked = false;
+    // THIS MAKES NO SENSE
+    setInput(data);  
     // I *think* this is the best choice here...
 		runAutoWlopOneStep();
+    clear();
     std::cout << "Iteration " << i << std::endl;
     i++;
-  }
+  } while (!para->getBool("The Skeletonlization Process Should Stop"));
+  std::cout << "Completed skeletonization with "
+            << data->getCurrentSkeleton()->branches.size() << " branches."
+            << std::endl;
 }
 
-void Skeletonization::runIteration()
+void Skeletonization::run()
 {
   is_skeleton_locked = false;
 
@@ -1876,6 +1878,7 @@ void Skeletonization::increaseRadius()
 
   current_radius *= (1 + speed);
   para->setValue("CGrid Radius", DoubleValue(current_radius));
+  std::cout << "------ Current Radius: " << current_radius << " ------" << std::endl;
 
 
   // for KangXue: maybe you want to save the skel_radius for virtual points here
@@ -2767,6 +2770,7 @@ void Skeletonization::reconnectSkeleton()
       std::copy(break_iter, end_iter, copy_curve.begin());
       break_curve.erase(break_iter+1, end_iter);
 
+      std::cerr << "ADDING A BRANCH" << std::endl;
       skeleton->branches.push_back(copy_branch);
       skeleton->generateBranchSampleMap();	
     }

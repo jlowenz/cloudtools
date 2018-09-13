@@ -4,8 +4,6 @@
 #include "GlobalFunction.h"
 #include "Algorithm/Skeleton.h"
 
-
-
 #include <wrap/io_trimesh/import.h>
 #include <wrap/io_trimesh/export.h>
 
@@ -14,6 +12,7 @@
 #include <fstream>
 #include <set>
 
+#include <Eigen/Core>
 
 using namespace vcg;
 using namespace std;

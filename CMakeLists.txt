@@ -42,10 +42,17 @@ add_library(medialskeleton
   src/GlobalFunction.cpp
   src/Parameter.cpp
   src/ParameterMgr.cpp
-  src/DataMgr.cpp)
+  src/DataMgr.cpp
+  src/grid.cpp
+  /usr/include/wrap/ply/plylib.cpp)
 target_link_libraries(medialskeleton ${PCL_LIBRARIES} Qt4::QtCore Qt4::QtGui ${ANN_LIBRARIES})
 
-install(TARGETS medialskeleton
+add_executable(pcd_skeleton
+  src/process_pcd.cpp)
+target_link_libraries(pcd_skeleton medialskeleton ${PCL_LIBRARIES}
+  Qt4::QtCore Qt4::QtGui ${Boost_LIBRARIES})
+
+install(TARGETS medialskeleton pcd_skeleton
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

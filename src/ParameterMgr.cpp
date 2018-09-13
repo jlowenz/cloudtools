@@ -6,6 +6,7 @@ ParameterMgr global_paraMgr;
 
 ParameterMgr::ParameterMgr(void)
 {
+  std::cout << "ParameterMgr()" << std::endl;
 	init_time++;
 	if(init_time > 1)
 	{
@@ -54,7 +55,7 @@ void ParameterMgr::setGlobalParameter(QString paraName,Value& val)
 void ParameterMgr::initDataMgrParameter()
 {
 	data.addParam(new RichDouble("Init Radius Para", 1.0));
-	data.addParam(new RichDouble("Down Sample Num", 1000));
+	data.addParam(new RichDouble("Down Sample Num", 2000));
 	data.addParam(new RichDouble("CGrid Radius", grid_r));
 }
 
@@ -171,7 +172,7 @@ void ParameterMgr::initSkeletonParameter()
 
 
   /// 
-  skeleton.addParam(new RichDouble("Num Of Iterate Time", 1));
+  skeleton.addParam(new RichDouble("Num Of Iterate Time", 500));
 	skeleton.addParam(new RichString("Algorithm Name", "Skeletonization") );
 	
 
@@ -193,13 +194,13 @@ void ParameterMgr::initSkeletonParameter()
 
 
 	//init
-	skeleton.addParam(new RichDouble("Max Iterate Time", 55));
-	skeleton.addParam(new RichDouble("Stop And Grow Error", 0.0005));
+	skeleton.addParam(new RichDouble("Max Iterate Time", 100));
+	skeleton.addParam(new RichDouble("Stop And Grow Error", 0.005));
 	skeleton.addParam(new RichDouble("Initial Radius", -1.));
-	skeleton.addParam(new RichDouble("Radius Update Speed", 0.5));
+	skeleton.addParam(new RichDouble("Radius Update Speed", 0.2));
 
 	//step0
-	skeleton.addParam(new RichDouble("Repulsion Mu", 0.35));
+	skeleton.addParam(new RichDouble("Repulsion Mu", 0.5));
 	skeleton.addParam(new RichDouble("Repulsion Mu2", 0.15));
 	skeleton.addParam(new RichDouble("Follow Sample Radius", 0.33));
 	skeleton.addParam(new RichDouble("Follow Sample Max Angle", 80));// should add to UI
@@ -218,20 +219,20 @@ void ParameterMgr::initSkeletonParameter()
 	skeleton.addParam(new RichDouble("Branches Search Angle", 25));
 	skeleton.addParam(new RichDouble("Virtual Head Accecpt Angle", 25));
 	skeleton.addParam(new RichDouble("Snake Search Max Dist Blue", 0.4));
-	skeleton.addParam(new RichDouble("Accept Branch Size", 6)); // important, and hard to determine
-	skeleton.addParam(new RichDouble("Branch Search Max Dist Yellow", 0.1));
+	skeleton.addParam(new RichDouble("Accept Branch Size", 3)); // important, and hard to determine
+	skeleton.addParam(new RichDouble("Branch Search Max Dist Yellow", 0.2));
 
-	skeleton.addParam(new RichDouble("Branches Merge Max Dist", 0.08));
-	skeleton.addParam(new RichDouble("Branch Search KNN", 12));
+	skeleton.addParam(new RichDouble("Branches Merge Max Dist", 0.2));
+	skeleton.addParam(new RichDouble("Branch Search KNN", 6));
 	skeleton.addParam(new RichDouble("Combine Similar Angle", 140));
-	skeleton.addParam(new RichDouble("Grow Search Radius", 0.15));
+	skeleton.addParam(new RichDouble("Grow Search Radius", 0.3));
 	skeleton.addParam(new RichDouble("Add Accept Branch Size", 1));
 
 
 	//step3
 	skeleton.addParam(new RichDouble("Clean Near Branches Dist", 0.05));
 	skeleton.addParam(new RichDouble("Fix Original Weight", 0.91));
-	skeleton.addParam(new RichDouble("Curve Segment Length", 0.051));
+	skeleton.addParam(new RichDouble("Curve Segment Length", 0.05));
 	skeleton.addParam(new RichInt("Fix Original Mode", 4)); // 1 for noisy , 4 for clean
 
   skeleton.addParam(new RichBool("Run ALL Segment", false));

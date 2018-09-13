@@ -1,6 +1,8 @@
 #include "Skeleton.h"
 
-
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/io/pcd_io.h>
 
 void Branch::pushBackCVertex(CVertex& new_v)
 {
@@ -272,25 +274,33 @@ void Skeleton::generateBranchSampleMap()
 	chosen_branches.clear();
 }
 
+void Skeleton::saveToPCD(const std::string & filename)
+{
+  typedef pcl::PointXYZL PointT;
+  typedef pcl::PointCloud<PointT> CloudT;
+  
+  printf("\nWriting %lu branches to the PCD file: %s\n",
+         branches.size(), filename.c_str());
 
+  CloudT::Ptr cloud(new CloudT);
+  
+  // TODO: look into the chosen branches!
+  for (size_t i = 0; i < branches.size(); ++i) {
+    Branch& b = branches[i];
+    for (size_t j = 0; j < b.curve.size(); ++j) {
+      PointT p;
+      auto cp = b.curve[j];
+      p.x = cp[0];
+      p.y = cp[1];
+      p.z = cp[2];
+      p.label = static_cast<uint32_t>(i);
+      cloud->push_back(p);
+    }
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  pcl::PCDWriter out;
+  out.writeBinary(filename, *cloud);
+}
 
 Point3f Branch::getVirtualTailDirection()
 {

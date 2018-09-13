@@ -1,0 +1,14 @@
+count-divisor=0.30
+max-angle-diff=0.01
+res-divisor=1000
+bandwidth=5
+bandwidth-scale=1.5
+min-search-ball=0.0000001
+max-search-ball=0.1
+theta-bins=720
+dist-bins=500
+
+[plane]
+min-points=1000
+dist-thresh=0.0005
+reflection_thresh=0.001

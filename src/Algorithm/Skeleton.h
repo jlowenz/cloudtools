@@ -138,5 +138,12 @@ public:
 		branch_sample_map.clear();
 		size = 0;
 	}
+
+  /**
+   * Save the skeleton to a PCD file. 
+   *
+   * Encodes the branch membership as a label in a PointXYZL structure. 
+   */
+  void saveToPCD(const std::string& filename);
 };
 

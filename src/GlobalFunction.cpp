@@ -22,19 +22,23 @@ void eigen_decomp(MT& cov, VT& val, MT& vec)
   // this could probably use Eigen::Map
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 3; ++j)
-      evec(i,j) = vec[i][j];
+      ecov(i,j) = cov[i][j];
   
   Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> es(ecov);
   eval = es.eigenvalues();
   evec = es.eigenvectors();
-  std::swap(eval[0],eval[2]);
-  auto t = evec.col(0);
-  evec.col(0) = evec.col(2);
-  evec.col(2) = t;
-  for (int i = 0; i < 3; ++i) val[i] = eval[i];
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j)
-      vec[i][j] = evec(i,j);
+  
+  int r = 2;
+  for (int i = 0; i < 3; ++i) val[i] = eval[r--];
+  std::cout << std::endl;
+  
+  r = 3;
+  for (int j = 0; j < 3; ++j) {
+    --r;
+    for (int i = 0; i < 3; ++i) {
+      vec[i][j] = evec(i,r);
+    }
+  }
 }
 
 void GlobalFun::find_original_neighbors(CGrid::iterator starta, CGrid::iterator enda, 
@@ -159,7 +163,10 @@ void GlobalFun::computeBallNeighbors(CMesh* mesh0, CMesh* mesh1, double radius, 
 }
 
 
-void GlobalFun::computeAnnNeigbhors(vector<CVertex> &datapts, vector<CVertex> &querypts, int knn, bool need_self_included = false, QString purpose = "?_?")
+void GlobalFun::computeAnnNeigbhors(vector<CVertex> &datapts,
+                                    vector<CVertex> &querypts,
+                                    int knn, bool need_self_included = false,
+                                    QString purpose = "?_?")
 {
 	cout << endl <<"Compute ANN for:	 " << purpose.toStdString() << endl;
 	int numKnn = knn + 1;

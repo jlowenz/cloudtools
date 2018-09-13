@@ -56,7 +56,6 @@ RichParameter* RichParameterSet::findParameter(QString name) const
 			return *fpli;
 	}
 	cout << "wrong name: " << name.toStdString() << endl;
-	system("Pause");
 
 	qDebug("FilterParameter Warning: Unable to find a parameter with name '%s',\n"
 		"      Please check types and names of the parameter in the calling filter",qPrintable(name));
